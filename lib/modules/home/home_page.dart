@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_portfolio/modules/about/view/about_section.dart';
 import 'package:my_portfolio/modules/bio/bio_widget.dart';
 import 'package:my_portfolio/modules/contact/view/contacts_section.dart';
 import 'package:my_portfolio/modules/footer/view/footer_section.dart';
@@ -20,7 +19,7 @@ class HomePage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            children: const [HeroSection(), BioWidget(), AboutSection(), SkillsSection(), ProjectsSection(), ContactSection(), FooterSection()],
+            children: const [HeroSection(), BioWidget(), SizedBox(height: 60), SkillsSection(), ProjectsSection(), ContactSection(), FooterSection()],
           ),
         ),
       ),
