@@ -46,3 +46,23 @@ flutter:
           weight: 500
         - asset: assets/fonts/Caveat-Regular.ttf
           weight: 400
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Manrope-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Manrope-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Manrope-Regular.ttf
+          weight: 400
+    - family: LexendMega
+      fonts:
+        - asset: assets/fonts/LexendMega-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/LexendMega-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/LexendMega-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/LexendMega-Regular.ttf
+          weight: 400

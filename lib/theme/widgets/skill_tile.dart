@@ -13,10 +13,6 @@ class SkillTile extends StatelessWidget {
       padding: EdgeInsets.all(24),
       height: 130,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        color: appColor(context)?.secondaryText?.withValues(alpha: 0.5),
-      ),
       child: Image.asset(assetPath),
     );
   }

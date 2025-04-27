@@ -17,6 +17,6 @@ ThemeData getAppTheme(BuildContext context) {
         whiteColor: Color(0xfffafafa),
       ),
     ],
-    fontFamily: 'Caveat',
+    fontFamily: 'LexendMega',
   );
 }

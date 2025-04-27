@@ -15,7 +15,7 @@ class SkillsSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
-          child: Text("My relevant skills", style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700, color: appColor(context)?.primaryText)),
+          child: Text("My relevant skills", style: TextStyle(fontSize: 65, color: appColor(context)?.primaryText, fontFamily: 'Caveat')),
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width - 40,
@@ -33,7 +33,7 @@ class SkillsSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 20),
-        Image.asset('assets/images/Skills.png'),
+        // Image.asset('assets/images/Skills.png'),
       ],
     );
   }
