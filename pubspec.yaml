@@ -16,6 +16,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   scroll_loop_auto_scroll: ^0.0.5
   lottie: ^3.3.1
+  url_launcher: ^6.3.1
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +36,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/lottie/
+    - .env
 
   fonts:
     - family: Caveat

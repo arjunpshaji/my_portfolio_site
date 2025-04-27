@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfolio/modules/experience/widgets/glowing_container.dart';
+import 'package:my_portfolio/support/helper.dart';
 import 'package:my_portfolio/support/projects_data.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
-import 'package:my_portfolio/theme/widgets/containerbox_widget.dart';
 
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
@@ -26,8 +26,9 @@ class ProjectsSection extends StatelessWidget {
             children:
                 projectsDataList
                     .map(
-                      (project) => ContainerboxWidget(
+                      (project) => GlowingContainer(
                         padding: EdgeInsets.all(16),
+                        border: Border.all(color: appColor(context)!.secondaryText!),
                         child: Column(
                           spacing: 16,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,11 +44,20 @@ class ProjectsSection extends StatelessWidget {
                                 textAlign: TextAlign.left,
                               ),
                             ),
+                            InkWell(
+                              onTap: () => launchAppUrl(project.url),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  project.url,
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: appColor(context)?.buttonColor),
+                                ),
+                              ),
+                            ),
                             Text(
                               project.description,
                               style: TextStyle(fontSize: 16, color: appColor(context)?.primaryText, fontStyle: FontStyle.italic),
                             ),
-                            Text(project.url, style: TextStyle(fontSize: 16)),
                           ],
                         ),
                       ),

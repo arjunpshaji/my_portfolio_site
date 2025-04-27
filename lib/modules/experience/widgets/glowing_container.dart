@@ -7,7 +7,8 @@ class GlowingContainer extends StatelessWidget {
   final double? height;
   final BorderRadiusGeometry? borderRadius;
   final EdgeInsetsGeometry? padding;
-  const GlowingContainer({super.key, required this.child, this.width, this.borderRadius, this.height, this.padding});
+  final BoxBorder? border;
+  const GlowingContainer({super.key, required this.child, this.width, this.borderRadius, this.height, this.padding, this.border});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,7 @@ class GlowingContainer extends StatelessWidget {
         decoration: BoxDecoration(
           color: appColor(context)!.secondaryText!.withValues(alpha: 0.003),
           borderRadius: borderRadius ?? BorderRadius.circular(50),
+          border:border,
           boxShadow: [BoxShadow(color: appColor(context)!.secondaryText!.withValues(alpha: 0.20), blurRadius: 20, spreadRadius: 5)],
         ),
         child: child,
