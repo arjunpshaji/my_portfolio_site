@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_portfolio/support/skill_logos.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
+import 'package:my_portfolio/theme/widgets/skill_tile.dart';
 import 'package:scroll_loop_auto_scroll/scroll_loop_auto_scroll.dart';
 
 class SkillsSection extends StatelessWidget {
@@ -8,71 +10,29 @@ class SkillsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 24,
       children: [
-        Text("Skills", style: TextStyle(fontSize: 36, fontWeight: FontWeight.w700, color: appColor(context)?.primaryText)),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Text("My relevant skills", style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700, color: appColor(context)?.primaryText)),
+        ),
         SizedBox(
           width: MediaQuery.of(context).size.width - 40,
           child: ScrollLoopAutoScroll(
             scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Container(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width / 2,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage('assets/images/Skills.png')),
-                    color: appColor(context)?.errorText,
-                  ),
-                  // child: const Text('ONE', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width / 2,
-                  color: Colors.red,
-                  alignment: Alignment.center,
-                  child: const Text('FOR', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width / 2,
-                  color: Colors.blue,
-                  alignment: Alignment.center,
-                  child: const Text('ALL', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width / 2,
-                  color: Colors.orange,
-                  alignment: Alignment.center,
-                  child: const Text('AND', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width / 2,
-                  color: Colors.blue,
-                  alignment: Alignment.center,
-                  child: const Text('ALL', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width / 2,
-                  color: Colors.red,
-                  alignment: Alignment.center,
-                  child: const Text('FOR', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width / 2,
-                  color: Colors.green,
-                  alignment: Alignment.center,
-                  child: const Text('ONE', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            ),
+            child: Row(children: skillData.sublist(0, 6).map((e) => SkillTile(assetPath: e.assetPath, title: e.title)).toList()),
           ),
         ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width - 40,
+          child: ScrollLoopAutoScroll(
+            scrollDirection: Axis.horizontal,
+            reverseScroll: true,
+            child: Row(children: skillData.sublist(6).map((e) => SkillTile(assetPath: e.assetPath, title: e.title)).toList()),
+          ),
+        ),
+        SizedBox(height: 20),
         Image.asset('assets/images/Skills.png'),
       ],
     );
