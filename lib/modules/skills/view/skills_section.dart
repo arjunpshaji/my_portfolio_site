@@ -9,13 +9,18 @@ class SkillsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 24,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
-          child: Text("My relevant skills", style: TextStyle(fontSize: 65, color: appColor(context)?.primaryText, fontFamily: 'Caveat')),
+          child: Text(
+            "My relevant skills",
+            style: TextStyle(fontSize: isMobile ? 55 : 65, color: appColor(context)?.primaryText, fontFamily: 'Caveat'),
+          ),
         ),
         SizedBox(
           width: MediaQuery.of(context).size.width - 40,
