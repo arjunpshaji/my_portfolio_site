@@ -8,6 +8,8 @@ class ContactSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
     return Column(
       spacing: 12,
       children: [
@@ -32,7 +34,7 @@ class ContactSection extends StatelessWidget {
         ),
         SelectableText(
           'Email: imarjunpshaji@gmail.com',
-          style: TextStyle(fontSize: 16, color: appColor(context)?.primaryText, fontStyle: FontStyle.italic),
+          style: TextStyle(fontSize: isMobile ? 12 : 16, color: appColor(context)?.primaryText, fontStyle: FontStyle.italic),
         ),
         SizedBox(height: 12)
       ],
