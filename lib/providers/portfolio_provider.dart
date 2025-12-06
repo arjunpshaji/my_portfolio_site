@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfolio/data/portfolio_repository.dart';
+import 'package:my_portfolio/models/experience.dart';
 import 'package:my_portfolio/models/profile.dart';
 import 'package:my_portfolio/models/projects.dart';
 import 'package:my_portfolio/models/social_links.dart';
@@ -10,12 +11,14 @@ class PortfolioProvider extends ChangeNotifier {
   Profile? _profile;
   List<SocialLink> _socialLinks = [];
   List<Project> _projects = [];
+  List<Experience> _experiences = [];
   bool _isLoading = true;
   String? _error;
 
   Profile? get profile => _profile;
   List<SocialLink> get socialLinks => _socialLinks;
   List<Project> get projects => _projects;
+  List<Experience> get experiences => _experiences;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -43,6 +46,15 @@ class PortfolioProvider extends ChangeNotifier {
       } catch (e) {
         print('❌ Error loading social links: $e');
         _error = (_error ?? '') + '\nFailed to load social links: $e';
+      }
+
+      // Load Experiences
+      try {
+        _experiences = await _repository.getExperiences();
+        print('✅ Experiences loaded: ${_experiences.length} items');
+      } catch (e) {
+        print('❌ Error loading experiences: $e');
+        _error = (_error ?? '') + '\nFailed to load experiences: $e';
       }
 
       // Load projects
