@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfolio/support/helper.dart';
-import 'package:my_portfolio/support/projects_data.dart';
+import 'package:provider/provider.dart';
+import 'package:my_portfolio/providers/portfolio_provider.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
 import 'package:my_portfolio/theme/widgets/glowing_container.dart';
+import 'package:my_portfolio/models/projects.dart';
 
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
 
   int getCrossAxisCount(double width) {
-    if (width < 600) return 1;      // Mobile
-    if (width < 1000) return 2;     // Tablet
-    return 3;                      // Desktop
+    if (width < 600) return 1; // Mobile
+    if (width < 1000) return 2; // Tablet
+    return 3; // Desktop
   }
 
   @override
@@ -19,6 +21,12 @@ class ProjectsSection extends StatelessWidget {
     final crossAxisCount = getCrossAxisCount(screenWidth);
     final itemWidth = screenWidth / crossAxisCount - 40;
     final isMobile = screenWidth < 600;
+
+    final projects = context.select<PortfolioProvider, List<Project>>(
+      (p) => p.projects,
+    );
+
+    if (projects.isEmpty) return const SizedBox.shrink();
 
     return Container(
       padding: EdgeInsets.all(isMobile ? 16 : 32),
@@ -38,8 +46,8 @@ class ProjectsSection extends StatelessWidget {
           Wrap(
             spacing: 20,
             runSpacing: 20,
-            children: List.generate(projectsDataList.length, (index) {
-              final project = projectsDataList[index];
+            children: List.generate(projects.length, (index) {
+              final project = projects[index];
               return AnimatedOpacity(
                 opacity: 1.0,
                 duration: Duration(milliseconds: 500 + (index * 200)),
@@ -47,21 +55,13 @@ class ProjectsSection extends StatelessWidget {
                   width: itemWidth,
                   child: GlowingContainer(
                     padding: const EdgeInsets.all(16),
-                    border: Border.all(color: appColor(context)!.secondaryText!),
+                    border: Border.all(
+                      color: appColor(context)!.secondaryText!,
+                    ),
                     borderRadius: BorderRadius.circular(30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (!isMobile)
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              project.thumbnailPath,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                            ),
-                          ),
-                        const SizedBox(height: 16),
                         Text(
                           project.title,
                           style: TextStyle(
@@ -70,18 +70,30 @@ class ProjectsSection extends StatelessWidget {
                             color: appColor(context)?.primaryText,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        InkWell(
-                          onTap: () => launchAppUrl(project.url),
-                          child: Text(
-                            project.url,
+                        if (project.techStack != null) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            project.techStack!,
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: appColor(context)?.buttonColor,
+                              fontSize: 14,
+                              color: appColor(context)?.secondaryText,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
+                        ],
+                        const SizedBox(height: 8),
+                        if (project.projectUrl != null)
+                          InkWell(
+                            onTap: () => launchAppUrl(project.projectUrl!),
+                            child: Text(
+                              project.projectUrl!,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: appColor(context)?.buttonColor,
+                              ),
+                            ),
+                          ),
                         const SizedBox(height: 8),
                         Text(
                           project.description,
