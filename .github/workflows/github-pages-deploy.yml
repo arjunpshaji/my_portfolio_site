@@ -32,6 +32,12 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       
+      - name: Create .env file
+        run: |
+          echo "cvLink = ${{ secrets.CV_LINK }}" > .env
+          echo "SUPABASE_URL = ${{ secrets.SUPABASE_URL }}" >> .env
+          echo "SUPABASE_ANON_KEY = ${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+      
       - name: Build web
         run: flutter build web --release --base-href="/my_portfolio_site/"
       
