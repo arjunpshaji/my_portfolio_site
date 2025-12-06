@@ -7,21 +7,32 @@ import 'package:provider/provider.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
-  await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-  );
+  print("🚀 App Starting...");
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    await dotenv.load(fileName: ".env");
+    print("✅ DotEnv loaded");
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => PortfolioProvider()..loadData()),
-      ],
-      child: const PortfolioApp(),
-    ),
-  );
+    await Supabase.initialize(
+      url: dotenv.env['SUPABASE_URL']!,
+      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    );
+    print("✅ Supabase initialized");
+
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => PortfolioProvider()..loadData(),
+          ),
+        ],
+        child: const PortfolioApp(),
+      ),
+    );
+  } catch (e, stack) {
+    print("🔥 Critical Error during startup: $e");
+    print(stack);
+  }
 }
 
 class PortfolioApp extends StatelessWidget {
