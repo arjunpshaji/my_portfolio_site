@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_portfolio/support/helper.dart';
+import 'package:my_portfolio/theme/app_colors.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
 import 'package:my_portfolio/theme/widgets/glowing_text.dart';
 import 'package:provider/provider.dart';
@@ -48,10 +49,10 @@ class BioWidget extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           ListTile(
-            leading: Lottie.asset(
-              "assets/lottie/download_icon.json",
-              width: 40,
-              height: 40,
+            leading: Icon(
+              Icons.cloud_download_outlined,
+              color: appColor(context)?.primaryText,
+              size: 24,
             ),
             title: GlowingText(isMobile: isMobile, text: "Download my CV"),
             onTap: () {

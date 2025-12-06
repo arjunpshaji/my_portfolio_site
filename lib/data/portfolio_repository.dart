@@ -1,5 +1,6 @@
 import 'package:my_portfolio/models/projects.dart';
 import 'package:my_portfolio/models/social_links.dart';
+import 'package:my_portfolio/models/experience.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/profile.dart';
 
@@ -52,6 +53,25 @@ class PortfolioRepository {
           .toList();
     } catch (e) {
       print('❌ Error in getProjects: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<Experience>> getExperiences() async {
+    try {
+      print('📡 Fetching experiences from Supabase...');
+      final data = await _client
+          .from('experiences')
+          .select()
+          .order('sort', ascending: true);
+      print('📦 Experiences data received: $data');
+
+      final list = data as List<dynamic>;
+      return list
+          .map((e) => Experience.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('❌ Error in getExperiences: $e');
       rethrow;
     }
   }

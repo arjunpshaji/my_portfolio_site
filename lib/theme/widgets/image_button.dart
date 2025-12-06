@@ -9,6 +9,13 @@ class ImageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    return InkWell(onTap: onTap,child: Image.asset(assetPath, width: isMobile ? 45 : 70, height: isMobile ? 50 : 70));
+    return InkWell(
+      onTap: onTap,
+      child: Image.asset(
+        assetPath,
+        width: isMobile ? 24 : 35,
+        height: isMobile ? 24 : 35,
+      ),
+    );
   }
 }
