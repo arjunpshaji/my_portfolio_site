@@ -7,12 +7,14 @@ class SkillTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
     return Container(
       margin: EdgeInsets.only(right: 16),
       padding: EdgeInsets.all(24),
-      height: 130,
+      height: isMobile ? 110 : 130,
       alignment: Alignment.center,
-      child: Image.asset(assetPath),
+      child: Image.asset(assetPath, width: isMobile ? 55 : 70, height: isMobile ? 55 : 70),
     );
   }
 }

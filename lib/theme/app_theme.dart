@@ -15,6 +15,7 @@ ThemeData getAppTheme(BuildContext context) {
         errorText: Color(0xffdb292a),
         buttonColor: Color(0xff3E7B27),
         whiteColor: Color(0xfffafafa),
+        hoverColor: Color.fromARGB(255, 137, 83, 203),
       ),
     ],
     fontFamily: 'LexendMega',

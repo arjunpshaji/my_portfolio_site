@@ -7,6 +7,15 @@ class ImageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(onTap: onTap,child: Image.asset(assetPath, width: 70, height: 70));
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    return InkWell(
+      onTap: onTap,
+      child: Image.asset(
+        assetPath,
+        width: isMobile ? 24 : 35,
+        height: isMobile ? 24 : 35,
+      ),
+    );
   }
 }
