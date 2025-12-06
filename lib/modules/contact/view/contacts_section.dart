@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfolio/support/helper.dart';
-import 'package:my_portfolio/theme/app_theme.dart';
+
 import 'package:my_portfolio/theme/widgets/image_button.dart';
 import 'package:provider/provider.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
@@ -24,10 +24,10 @@ class ContactSection extends StatelessWidget {
     return Column(
       spacing: 12,
       children: [
-        const SizedBox(height: 12),
-        Row(
-          spacing: 8,
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
           children:
               socialLinks.map((link) {
                 // Map label to icon asset
@@ -51,15 +51,6 @@ class ContactSection extends StatelessWidget {
                 );
               }).toList(),
         ),
-        SelectableText(
-          'Email: $email',
-          style: TextStyle(
-            fontSize: isMobile ? 12 : 16,
-            color: appColor(context)?.primaryText,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-        const SizedBox(height: 12),
       ],
     );
   }

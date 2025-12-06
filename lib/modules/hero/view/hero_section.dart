@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_portfolio/modules/contact/view/contacts_section.dart';
 import 'package:provider/provider.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
-import 'package:my_portfolio/models/profile.dart';
 import 'package:my_portfolio/modules/hero/widgets/name_widget.dart';
 import 'package:my_portfolio/modules/hero/widgets/profile_image_widget.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
@@ -78,6 +78,8 @@ class _TextSection extends StatelessWidget {
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: TextStyle(fontSize: isMobile ? 20 : 24, color: primaryColor),
           ),
+          const SizedBox(height: 16),
+          ContactSection(),
         ],
       ),
     );
