@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:my_portfolio/providers/portfolio_provider.dart';
+import 'package:my_portfolio/models/profile.dart';
 import 'package:my_portfolio/modules/hero/widgets/name_widget.dart';
 import 'package:my_portfolio/modules/hero/widgets/profile_image_widget.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
@@ -24,7 +27,10 @@ class HeroSection extends StatelessWidget {
             runSpacing: 32,
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
-            children: [const ProfileImageWidget(), _TextSection(isMobile: isMobile)],
+            children: [
+              const ProfileImageWidget(),
+              _TextSection(isMobile: isMobile),
+            ],
           ),
         ],
       ),
@@ -40,36 +46,31 @@ class _TextSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = appColor(context)?.primaryText;
-    final secondaryColor = appColor(context)?.secondaryText;
+    final tagline = context.select<PortfolioProvider, String>(
+      (p) => p.profile?.tagline ?? "Judges a book\nby its cover",
+    );
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 600),
       child: Column(
-        crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
           Text(
             "A developer who",
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
-            style: TextStyle(fontSize: isMobile ? 20 : 24, fontWeight: FontWeight.w700, color: primaryColor, decoration: TextDecoration.underline),
+            style: TextStyle(
+              fontSize: isMobile ? 20 : 24,
+              fontWeight: FontWeight.w700,
+              color: primaryColor,
+              decoration: TextDecoration.underline,
+            ),
           ),
           const SizedBox(height: 16),
-          Text.rich(
-            TextSpan(
-              style: TextStyle(fontSize: isMobile ? 36 : 50, color: primaryColor),
-              children: [
-                TextSpan(text: "Judges a book\nby its ", style: TextStyle(color: primaryColor)),
-                TextSpan(
-                  text: "cover",
-                  style: TextStyle(
-                    color: secondaryColor,
-                    decoration: TextDecoration.underline,
-                    decorationColor: secondaryColor,
-                    fontSize: isMobile ? 44 : 66,
-                  ),
-                ),
-              ],
-            ),
+          Text(
+            tagline,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
+            style: TextStyle(fontSize: isMobile ? 36 : 50, color: primaryColor),
           ),
           const SizedBox(height: 16),
           Text(
