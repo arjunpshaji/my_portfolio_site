@@ -7,17 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
 
 void main() async {
-  print("🚀 App Starting...");
   try {
     WidgetsFlutterBinding.ensureInitialized();
     await dotenv.load(fileName: ".env");
-    print("✅ DotEnv loaded");
 
     await Supabase.initialize(
-      url: dotenv.env['SUPABASE_URL']!,
-      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+      url: dotenv.env['SUPABASE_URL'] ?? '',
+      anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
     );
-    print("✅ Supabase initialized");
 
     runApp(
       MultiProvider(
@@ -29,9 +26,9 @@ void main() async {
         child: const PortfolioApp(),
       ),
     );
-  } catch (e, stack) {
-    print("🔥 Critical Error during startup: $e");
-    print(stack);
+  } catch (e) {
+    // Graceful startup fallback
+    runApp(const PortfolioApp());
   }
 }
 

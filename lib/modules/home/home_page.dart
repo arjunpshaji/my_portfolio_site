@@ -9,6 +9,7 @@ import 'package:my_portfolio/modules/home/widgets/navbar_widget.dart';
 import 'package:my_portfolio/modules/projects/view/project_section.dart';
 import 'package:my_portfolio/modules/skills/view/skills_section.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
+import 'package:my_portfolio/theme/widgets/custom_cursor.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -90,117 +91,119 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: const Color(0xff0B0819),
-      body: Stack(
-        children: [
-          // Ambient Background Glow Orbs
-          Positioned(
-            top: -100,
-            right: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xff7C3AED).withValues(alpha: 0.18),
-                    Colors.transparent,
-                  ],
+      body: CustomCursorOverlay(
+        child: Stack(
+          children: [
+            // Ambient Background Glow Orbs
+            Positioned(
+              top: -100,
+              right: -100,
+              child: Container(
+                width: 500,
+                height: 500,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xff7C3AED).withValues(alpha: 0.18),
+                      Colors.transparent,
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            top: 700,
-            left: -150,
-            child: Container(
-              width: 600,
-              height: 600,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xff06B6D4).withValues(alpha: 0.12),
-                    Colors.transparent,
-                  ],
+            Positioned(
+              top: 700,
+              left: -150,
+              child: Container(
+                width: 600,
+                height: 600,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xff06B6D4).withValues(alpha: 0.12),
+                      Colors.transparent,
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            top: 1800,
-            right: -100,
-            child: Container(
-              width: 500,
-              height: 500,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xffA855F7).withValues(alpha: 0.15),
-                    Colors.transparent,
-                  ],
+            Positioned(
+              top: 1800,
+              right: -100,
+              child: Container(
+                width: 500,
+                height: 500,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xffA855F7).withValues(alpha: 0.15),
+                      Colors.transparent,
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // Main Scrollable Page Content
-          SingleChildScrollView(
-            controller: _scrollController,
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                // Top spacing for floating navbar
-                const SizedBox(height: 80),
+            // Main Scrollable Page Content
+            SingleChildScrollView(
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  // Top spacing for floating navbar
+                  const SizedBox(height: 80),
 
-                // 0. Hero Section
-                HeroSection(
-                  key: _heroKey,
-                  onViewProjects: () => _scrollToSection(4),
-                  onContact: () => _scrollToSection(5),
-                ),
+                  // 0. Hero Section
+                  HeroSection(
+                    key: _heroKey,
+                    onViewProjects: () => _scrollToSection(4),
+                    onContact: () => _scrollToSection(5),
+                  ),
 
-                const SizedBox(height: 40),
+                  const SizedBox(height: 40),
 
-                // 1. About / Bio Widget
-                BioWidget(key: _aboutKey),
+                  // 1. About / Bio Widget
+                  BioWidget(key: _aboutKey),
 
-                const SizedBox(height: 50),
+                  const SizedBox(height: 50),
 
-                // 2. Experience Section
-                ExperienceSection(key: _experienceKey),
+                  // 2. Experience Section
+                  ExperienceSection(key: _experienceKey),
 
-                const SizedBox(height: 50),
+                  const SizedBox(height: 50),
 
-                // 3. Skills Section
-                SkillsSection(key: _skillsKey),
+                  // 3. Skills Section
+                  SkillsSection(key: _skillsKey),
 
-                const SizedBox(height: 50),
+                  const SizedBox(height: 50),
 
-                // 4. Projects Section
-                ProjectsSection(key: _projectsKey),
+                  // 4. Projects Section
+                  ProjectsSection(key: _projectsKey),
 
-                const SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
-                // 5. Contact Section
-                ContactSection(key: _contactKey),
+                  // 5. Contact Section
+                  ContactSection(key: _contactKey),
 
-                const SizedBox(height: 40),
+                  const SizedBox(height: 40),
 
-                // Footer
-                FooterSection(
-                  onBackToTop: () => _scrollToSection(0),
-                ),
-              ],
+                  // Footer
+                  FooterSection(
+                    onBackToTop: () => _scrollToSection(0),
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // Floating Glassmorphic Navbar (Always visible at top)
-          NavbarWidget(
-            onSectionSelected: _scrollToSection,
-          ),
-        ],
+            // Floating Glassmorphic Navbar (Always visible at top)
+            NavbarWidget(
+              onSectionSelected: _scrollToSection,
+            ),
+          ],
+        ),
       ),
     );
   }

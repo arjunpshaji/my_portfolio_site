@@ -6,6 +6,7 @@ import 'package:my_portfolio/providers/portfolio_provider.dart';
 import 'package:my_portfolio/modules/hero/widgets/name_widget.dart';
 import 'package:my_portfolio/modules/hero/widgets/profile_image_widget.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
+import 'package:my_portfolio/theme/widgets/liquid_glass.dart';
 
 class HeroSection extends StatelessWidget {
   final VoidCallback? onViewProjects;
@@ -153,77 +154,36 @@ class _CtaButtons extends StatelessWidget {
       runSpacing: 14,
       alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
       children: [
-        // Primary Button: View Projects
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xff7C3AED),
-            padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            elevation: 8,
-            shadowColor: const Color(0xff7C3AED).withValues(alpha: 0.5),
+        // Primary Button: Explore Projects (Liquid Glass)
+        if (onViewProjects != null)
+          LiquidGlassButton(
+            label: "Explore Projects",
+            icon: Icons.arrow_downward_rounded,
+            primaryColor: const Color(0xff8B5CF6),
+            secondaryColor: const Color(0xff06B6D4),
+            padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 15),
+            onTap: onViewProjects!,
           ),
-          onPressed: onViewProjects,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text(
-                "Explore Projects",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontFamily: 'Manrope',
-                ),
-              ),
-              SizedBox(width: 8),
-              Icon(Icons.arrow_downward_rounded, size: 16, color: Colors.white),
-            ],
-          ),
-        ),
 
-        // Secondary Button: Contact Me
-        OutlinedButton(
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            side: BorderSide(
-              color: Colors.white.withValues(alpha: 0.2),
-              width: 1.5,
-            ),
+        // Secondary Button: Get in Touch (Liquid Frosted Glass)
+        if (onContact != null)
+          LiquidGlassButton(
+            label: "Get in Touch",
+            icon: Icons.mail_outline_rounded,
+            isSecondary: true,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
+            onTap: onContact!,
           ),
-          onPressed: onContact,
-          child: const Text(
-            "Get in Touch",
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-              fontFamily: 'Manrope',
-            ),
-          ),
-        ),
 
-        // Download CV Button
+        // Download CV Button (Liquid Glass Cyan)
         if (cvUrl != null && cvUrl!.isNotEmpty)
-          TextButton.icon(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            ),
-            onPressed: () => launchAppUrl(cvUrl!),
-            icon: const Icon(Icons.download_rounded, color: Color(0xff38BDF8), size: 18),
-            label: const Text(
-              "Download CV",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xff38BDF8),
-                fontFamily: 'Manrope',
-              ),
-            ),
+          LiquidGlassButton(
+            label: "Download CV",
+            icon: Icons.download_rounded,
+            primaryColor: const Color(0xff0284C7),
+            secondaryColor: const Color(0xff38BDF8),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            onTap: () => launchAppUrl(cvUrl!),
           ),
       ],
     );

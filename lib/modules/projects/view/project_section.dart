@@ -3,7 +3,9 @@ import 'package:my_portfolio/support/helper.dart';
 import 'package:provider/provider.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
+import 'package:my_portfolio/theme/widgets/liquid_glass.dart';
 import 'package:my_portfolio/models/projects.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
@@ -77,19 +79,21 @@ class ProjectsSection extends StatelessWidget {
             builder: (context, constraints) {
               final availableWidth = constraints.maxWidth;
               const double gap = 28.0;
-              final cardWidth = crossAxisCount == 1
-                  ? availableWidth
-                  : (availableWidth - gap) / 2;
+              final cardWidth =
+                  crossAxisCount == 1
+                      ? availableWidth
+                      : (availableWidth - gap) / 2;
 
               return Wrap(
                 spacing: gap,
                 runSpacing: gap,
-                children: projects.map((project) {
-                  return SizedBox(
-                    width: cardWidth,
-                    child: _ProjectCard(project: project),
-                  );
-                }).toList(),
+                children:
+                    projects.map((project) {
+                      return SizedBox(
+                        width: cardWidth,
+                        child: _ProjectCard(project: project),
+                      );
+                    }).toList(),
               );
             },
           ),
@@ -113,21 +117,15 @@ class _ProjectCardState extends State<_ProjectCard> {
   @override
   Widget build(BuildContext context) {
     final colors = appColor(context)!;
-    final techTags = widget.project.techStack
+    final techTags =
+        widget.project.techStack
             ?.split(',')
             .map((e) => e.trim())
             .where((e) => e.isNotEmpty)
             .toList() ??
         [];
 
-    // Determine banner image or fallback
-    String? bannerAsset;
-    final lowerTitle = widget.project.title.toLowerCase();
-    if (lowerTitle.contains('invoice') || lowerTitle.contains('pdf')) {
-      bannerAsset = 'assets/images/invoice_builder_thumbnail.png';
-    } else if (lowerTitle.contains('date') || lowerTitle.contains('simply')) {
-      bannerAsset = 'assets/images/pub_dev_bg.png';
-    }
+    final bannerSource = _resolveBannerImage();
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -135,69 +133,35 @@ class _ProjectCardState extends State<_ProjectCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         decoration: BoxDecoration(
-          color: _isHovered
-              ? const Color(0xff181434).withValues(alpha: 0.95)
-              : const Color(0xff120F24).withValues(alpha: 0.8),
+          color:
+              _isHovered
+                  ? const Color(0xff181434).withValues(alpha: 0.95)
+                  : const Color(0xff120F24).withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: _isHovered
-                ? const Color(0xffC084FC).withValues(alpha: 0.5)
-                : Colors.white.withValues(alpha: 0.08),
+            color:
+                _isHovered
+                    ? const Color(0xffC084FC).withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.08),
             width: 1.5,
           ),
-          boxShadow: _isHovered
-              ? [
-                  BoxShadow(
-                    color: const Color(0xffA855F7).withValues(alpha: 0.25),
-                    blurRadius: 28,
-                    offset: const Offset(0, 10),
-                  ),
-                ]
-              : [],
+          boxShadow:
+              _isHovered
+                  ? [
+                    BoxShadow(
+                      color: const Color(0xffA855F7).withValues(alpha: 0.25),
+                      blurRadius: 28,
+                      offset: const Offset(0, 10),
+                    ),
+                  ]
+                  : [],
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Project Banner
-            if (bannerAsset != null)
-              SizedBox(
-                height: 180,
-                width: double.infinity,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.asset(
-                      bannerAsset,
-                      fit: BoxFit.cover,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            const Color(0xff120F24).withValues(alpha: 0.85),
-                            const Color(0xff120F24),
-                          ],
-                          stops: const [0.3, 0.8, 1.0],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            else
-              Container(
-                height: 80,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xff2E1065), Color(0xff0C4A6E)],
-                  ),
-                ),
-              ),
+            // Dynamic Project Banner (Supabase Storage / Web / Asset)
+            _buildBanner(bannerSource),
 
             // Card Body
             Padding(
@@ -248,62 +212,39 @@ class _ProjectCardState extends State<_ProjectCard> {
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: techTags.map((tag) => _TechTag(label: tag)).toList(),
+                      children:
+                          techTags.map((tag) => _TechTag(label: tag)).toList(),
                     ),
                   const SizedBox(height: 24),
 
                   // Action Links
-                  Row(
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 10,
                     children: [
                       if (widget.project.projectUrl != null)
-                        ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff7C3AED),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 10,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: () => launchAppUrl(widget.project.projectUrl!),
-                          icon: const Icon(Icons.open_in_new_rounded, size: 15, color: Colors.white),
-                          label: const Text(
-                            "View Project",
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontFamily: 'Manrope',
-                            ),
-                          ),
-                        ),
-                      const SizedBox(width: 12),
-                      OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
+                        LiquidGlassButton(
+                          label: "View Project",
+                          icon: Icons.open_in_new_rounded,
+                          primaryColor: const Color(0xff8B5CF6),
+                          secondaryColor: const Color(0xff06B6D4),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
+                            horizontal: 18,
                             vertical: 10,
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(
-                            color: Colors.white.withValues(alpha: 0.15),
-                          ),
+                          onTap: () => launchAppUrl(widget.project.projectUrl!),
                         ),
-                        onPressed: () => launchAppUrl("https://github.com/arjunpshaji"),
-                        icon: const Icon(Icons.code_rounded, size: 15, color: Colors.white),
-                        label: const Text(
-                          "GitHub",
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            fontFamily: 'Manrope',
-                          ),
+                      LiquidGlassButton(
+                        label: "GitHub",
+                        icon: Icons.code_rounded,
+                        isSecondary: true,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
                         ),
+                        onTap:
+                            () =>
+                                launchAppUrl("https://github.com/arjunpshaji"),
                       ),
                     ],
                   ),
@@ -315,7 +256,160 @@ class _ProjectCardState extends State<_ProjectCard> {
       ),
     );
   }
+
+  String? _resolveBannerImage() {
+    final rawUrl = widget.project.imageUrl?.trim();
+    if (rawUrl != null && rawUrl.isNotEmpty) {
+      if (rawUrl.startsWith('http://') ||
+          rawUrl.startsWith('https://') ||
+          rawUrl.startsWith('assets/')) {
+        return rawUrl;
+      }
+      // If it is a filename/path stored in the Supabase 'project-thumbnails' storage bucket
+      try {
+        return Supabase.instance.client.storage
+            .from('project-thumbnails')
+            .getPublicUrl(rawUrl);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    // Dynamic web thumbnail / pub.dev package detection
+    final projectUrl = widget.project.projectUrl?.toLowerCase() ?? '';
+    final lowerTitle = widget.project.title.toLowerCase();
+    if (projectUrl.contains('pub.dev') ||
+        lowerTitle.contains('simply') ||
+        lowerTitle.contains('date')) {
+      return 'assets/images/pub_dev_bg.png';
+    }
+
+    if (lowerTitle.contains('invoice') || lowerTitle.contains('pdf')) {
+      return 'assets/images/invoice_builder_thumbnail.png';
+    }
+
+    return null;
+  }
+
+  Widget _buildBanner(String? bannerSource) {
+    if (bannerSource == null) {
+      return Container(
+        height: 100,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff2E1065), Color(0xff0C4A6E)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: const Center(
+          child: Icon(Icons.code_rounded, color: Colors.white24, size: 40),
+        ),
+      );
+    }
+
+    final isNetwork =
+        bannerSource.startsWith('http://') || bannerSource.startsWith('https://');
+
+    final Widget imageWidget;
+    if (isNetwork) {
+      imageWidget = Image.network(
+        bannerSource,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: const Color(0xff120F24),
+            child: Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  value:
+                      loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                  strokeWidth: 2,
+                  color: const Color(0xffA855F7),
+                ),
+              ),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          final lowerTitle = widget.project.title.toLowerCase();
+          if (lowerTitle.contains('invoice') || lowerTitle.contains('pdf')) {
+            return Image.asset(
+              'assets/images/invoice_builder_thumbnail.png',
+              fit: BoxFit.cover,
+            );
+          } else if (lowerTitle.contains('date') ||
+              lowerTitle.contains('simply')) {
+            return Image.asset(
+              'assets/images/pub_dev_bg.png',
+              fit: BoxFit.cover,
+            );
+          }
+          return Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xff2E1065), Color(0xff0C4A6E)],
+              ),
+            ),
+            child: const Center(
+              child: Icon(
+                Icons.broken_image_rounded,
+                color: Colors.white24,
+                size: 36,
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      imageWidget = Image.asset(
+        bannerSource,
+        fit: BoxFit.cover,
+        errorBuilder:
+            (context, error, stackTrace) => Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xff2E1065), Color(0xff0C4A6E)],
+                ),
+              ),
+            ),
+      );
+    }
+
+    return SizedBox(
+      height: 180,
+      width: double.infinity,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          imageWidget,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  const Color(0xff120F24).withValues(alpha: 0.85),
+                  const Color(0xff120F24),
+                ],
+                stops: const [0.3, 0.8, 1.0],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
 
 class _TechTag extends StatelessWidget {
   final String label;
