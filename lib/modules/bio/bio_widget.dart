@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:lottie/lottie.dart';
 import 'package:my_portfolio/support/helper.dart';
-import 'package:my_portfolio/theme/app_colors.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
-import 'package:my_portfolio/theme/widgets/glowing_text.dart';
 import 'package:provider/provider.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
-import 'package:my_portfolio/models/profile.dart';
 
 class BioWidget extends StatelessWidget {
   const BioWidget({super.key});
@@ -15,55 +10,337 @@ class BioWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
+    final isMobile = screenWidth < 800;
+    final colors = appColor(context)!;
 
     final about = context.select<PortfolioProvider, String>(
       (p) =>
-          p.profile?.about ?? "Software Developer with hands-on experience...",
+          p.profile?.about ??
+          "Passionate Software Developer with extensive experience in building robust, responsive, and performant cross-platform mobile and web applications. Expert in Clean Architecture, reactive state management (Riverpod/BLoC), high-performance UI rendering, and IoT integrations.",
     );
     final cvUrl = context.select<PortfolioProvider, String?>(
       (p) => p.profile?.cvUrl,
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 1200),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24.0 : 40.0,
+        vertical: 40,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 90),
-          Text(
-            "I'm a Software Developer",
-            style: TextStyle(
-              fontSize: isMobile ? 55 : 65,
-              color: appColor(context)?.primaryText,
-              fontFamily: 'Caveat',
+          // Metrics Strip
+          _MetricsStrip(isMobile: isMobile),
+          const SizedBox(height: 60),
+
+          // Section Header
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 28,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xffA855F7), Color(0xff06B6D4)],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "About Me",
+                style: TextStyle(
+                  fontSize: isMobile ? 28 : 36,
+                  fontWeight: FontWeight.w900,
+                  color: colors.primaryText,
+                  fontFamily: 'Manrope',
+                  letterSpacing: -0.8,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 28),
+
+          // Main Split Content
+          if (isMobile)
+            Column(
+              children: [
+                _AboutStoryCard(about: about, cvUrl: cvUrl),
+                const SizedBox(height: 24),
+                const _FocusAreasList(),
+              ],
+            )
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: _AboutStoryCard(about: about, cvUrl: cvUrl),
+                ),
+                const SizedBox(width: 32),
+                const Expanded(
+                  flex: 5,
+                  child: _FocusAreasList(),
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricsStrip extends StatelessWidget {
+  final bool isMobile;
+  const _MetricsStrip({required this.isMobile});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 32,
+        vertical: 24,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1,
+        ),
+      ),
+      child: Wrap(
+        alignment: WrapAlignment.spaceAround,
+        runAlignment: WrapAlignment.center,
+        spacing: 24,
+        runSpacing: 20,
+        children: const [
+          _MetricItem(value: "3+", label: "Years Experience"),
+          _MetricItem(value: "10+", label: "Projects & Packages"),
+          _MetricItem(value: "100%", label: "Clean Architecture"),
+          _MetricItem(value: "2", label: "Stores (Play & App Store)"),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricItem extends StatelessWidget {
+  final String value;
+  final String label;
+
+  const _MetricItem({required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xffC084FC), Color(0xff38BDF8)],
+          ).createShader(bounds),
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              fontFamily: 'Manrope',
             ),
           ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Color(0xff94A3B8),
+            fontFamily: 'Manrope',
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AboutStoryCard extends StatelessWidget {
+  final String about;
+  final String? cvUrl;
+
+  const _AboutStoryCard({required this.about, this.cvUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = appColor(context)!;
+    return Container(
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: const Color(0xff120F24).withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.1),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Building the future of mobile experiences.",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: colors.primaryText,
+              fontFamily: 'Manrope',
+              letterSpacing: -0.4,
+            ),
+          ),
+          const SizedBox(height: 16),
           Text(
             about,
             style: TextStyle(
-              fontSize: isMobile ? 18 : 24,
-              color: appColor(context)?.primaryText,
-              fontStyle: FontStyle.italic,
+              fontSize: 15,
+              height: 1.7,
+              color: colors.subText,
+              fontFamily: 'Manrope',
             ),
           ),
-          const SizedBox(height: 12),
-          ListTile(
-            leading: Icon(
-              Icons.cloud_download_outlined,
-              color: appColor(context)?.primaryText,
-              size: 24,
+          const SizedBox(height: 24),
+          if (cvUrl != null && cvUrl!.isNotEmpty)
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff7C3AED),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              icon: const Icon(Icons.description_outlined, size: 16, color: Colors.white),
+              label: const Text(
+                "View Curriculum Vitae",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  fontFamily: 'Manrope',
+                ),
+              ),
+              onPressed: () => launchAppUrl(cvUrl!),
             ),
-            title: GlowingText(isMobile: isMobile, text: "Download my CV"),
-            onTap: () {
-              if (cvUrl != null && cvUrl.isNotEmpty) {
-                launchAppUrl(cvUrl);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("CV not available")),
-                );
-              }
-            },
+        ],
+      ),
+    );
+  }
+}
+
+class _FocusAreasList extends StatelessWidget {
+  const _FocusAreasList();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: const [
+        _FocusCard(
+          icon: Icons.phone_android_rounded,
+          title: "Cross-Platform Engineering",
+          description:
+              "High-performance native iOS, Android, and Web applications engineered from a unified Flutter codebase.",
+          accentColor: Color(0xffA855F7),
+        ),
+        SizedBox(height: 14),
+        _FocusCard(
+          icon: Icons.architecture_rounded,
+          title: "Clean Architecture & State Management",
+          description:
+              "Scalable modular codebases powered by Riverpod and BLoC with separation of concerns and testability.",
+          accentColor: Color(0xff06B6D4),
+        ),
+        SizedBox(height: 14),
+        _FocusCard(
+          icon: Icons.sensors_rounded,
+          title: "IoT & Realtime Streaming",
+          description:
+              "Bluetooth Low Energy (BLE), MQTT protocol integrations, and WebSocket streaming for hardware ecosystems.",
+          accentColor: Color(0xffF59E0B),
+        ),
+      ],
+    );
+  }
+}
+
+class _FocusCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+  final Color accentColor;
+
+  const _FocusCard({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.accentColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.07),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: accentColor.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: accentColor.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Icon(icon, color: accentColor, size: 22),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontFamily: 'Manrope',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    height: 1.5,
+                    color: Color(0xff94A3B8),
+                    fontFamily: 'Manrope',
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
