@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfolio/data/portfolio_repository.dart';
 import 'package:my_portfolio/models/experience.dart';
+import 'package:my_portfolio/models/metric.dart';
 import 'package:my_portfolio/models/profile.dart';
 import 'package:my_portfolio/models/projects.dart';
 import 'package:my_portfolio/models/social_links.dart';
@@ -12,6 +13,7 @@ class PortfolioProvider extends ChangeNotifier {
   List<SocialLink> _socialLinks = [];
   List<Project> _projects = [];
   List<Experience> _experiences = [];
+  List<Metric> _metrics = [];
   bool _isLoading = true;
   String? _error;
 
@@ -19,6 +21,7 @@ class PortfolioProvider extends ChangeNotifier {
   List<SocialLink> get socialLinks => _socialLinks;
   List<Project> get projects => _projects;
   List<Experience> get experiences => _experiences;
+  List<Metric> get metrics => _metrics;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -28,51 +31,37 @@ class PortfolioProvider extends ChangeNotifier {
       _error = null;
       notifyListeners();
 
-      print('🔄 Starting to load portfolio data...');
-
-      // Load profile
+      // Load all sections concurrently or sequentially with silent fallback
       try {
         _profile = await _repository.getProfile();
-        print('✅ Profile loaded: ${_profile?.fullName}');
       } catch (e) {
-        print('❌ Error loading profile: $e');
-        _error = 'Failed to load profile: $e';
+        _error = 'Failed to load profile';
       }
 
-      // Load social links
       try {
         _socialLinks = await _repository.getSocialLinks();
-        print('✅ Social links loaded: ${_socialLinks.length} items');
       } catch (e) {
-        print('❌ Error loading social links: $e');
-        _error = (_error ?? '') + '\nFailed to load social links: $e';
+        _error = 'Failed to load social links';
       }
 
-      // Load Experiences
       try {
         _experiences = await _repository.getExperiences();
-        print('✅ Experiences loaded: ${_experiences.length} items');
       } catch (e) {
-        print('❌ Error loading experiences: $e');
-        _error = (_error ?? '') + '\nFailed to load experiences: $e';
+        _error = 'Failed to load experiences';
       }
 
-      // Load projects
       try {
         _projects = await _repository.getProjects();
-        print('✅ Projects loaded: ${_projects.length} items');
       } catch (e) {
-        print('❌ Error loading projects: $e');
-        _error = (_error ?? '') + '\nFailed to load projects: $e';
+        _error = 'Failed to load projects';
       }
 
-      if (_error != null) {
-        print('⚠️ Completed with errors: $_error');
-      } else {
-        print('✅ All data loaded successfully!');
+      try {
+        _metrics = await _repository.getMetrics();
+      } catch (e) {
+        _error = 'Failed to load metrics';
       }
     } catch (e) {
-      print('❌ Fatal error in loadData: $e');
       _error = e.toString();
     } finally {
       _isLoading = false;

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
 import 'package:my_portfolio/models/social_links.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
+import 'package:my_portfolio/theme/widgets/liquid_glass.dart';
 
 class SocialLinksBar extends StatelessWidget {
   const SocialLinksBar({super.key});
@@ -202,16 +203,11 @@ class _EmailCardState extends State<_EmailCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return LiquidGlassContainer(
+      borderRadius: 20,
+      blur: 20,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.15),
-          width: 1,
-        ),
-      ),
+      tintColor: const Color(0xffA855F7),
       child: Wrap(
         spacing: 12,
         runSpacing: 10,
@@ -248,10 +244,15 @@ class _EmailCardState extends State<_EmailCard> {
                 },
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: _isCopied
+                          ? Colors.greenAccent.withValues(alpha: 0.5)
+                          : Colors.white.withValues(alpha: 0.15),
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -274,26 +275,16 @@ class _EmailCardState extends State<_EmailCard> {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              // Send Mail Button
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff7C3AED),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                icon: const Icon(Icons.send_rounded, size: 14, color: Colors.white),
-                label: const Text(
-                  "Say Hello",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () => launchAppUrl("mailto:${widget.email}"),
+              const SizedBox(width: 10),
+              // Send Mail Button (Liquid Glass)
+              LiquidGlassButton(
+                label: "Say Hello",
+                icon: Icons.send_rounded,
+                primaryColor: const Color(0xff8B5CF6),
+                secondaryColor: const Color(0xff06B6D4),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                borderRadius: 10,
+                onTap: () => launchAppUrl("mailto:${widget.email}"),
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:my_portfolio/models/projects.dart';
 import 'package:my_portfolio/models/social_links.dart';
 import 'package:my_portfolio/models/experience.dart';
+import 'package:my_portfolio/models/metric.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/profile.dart';
 
@@ -9,12 +10,9 @@ class PortfolioRepository {
 
   Future<Profile> getProfile() async {
     try {
-      print('📡 Fetching profile from Supabase...');
       final data = await _client.from('profile').select().single();
-      print('📦 Profile data received: $data');
       return Profile.fromMap(data);
-    } catch (e) {
-      print('❌ Error in getProfile: $e. Using fallback profile.');
+    } catch (_) {
       return Profile(
         fullName: 'Arjun P Shaji',
         tagline: 'Senior Flutter & Mobile Developer',
@@ -31,12 +29,10 @@ class PortfolioRepository {
 
   Future<List<SocialLink>> getSocialLinks() async {
     try {
-      print('📡 Fetching social links from Supabase...');
       final data = await _client
           .from('social_links')
           .select()
           .order('sort', ascending: true);
-      print('📦 Social links data received: $data');
 
       final list = data as List<dynamic>;
       if (list.isNotEmpty) {
@@ -44,9 +40,7 @@ class PortfolioRepository {
             .map((e) => SocialLink.fromMap(e as Map<String, dynamic>))
             .toList();
       }
-    } catch (e) {
-      print('❌ Error in getSocialLinks: $e. Using fallback social links.');
-    }
+    } catch (_) {}
     return [
       SocialLink(
         label: 'LinkedIn',
@@ -73,12 +67,10 @@ class PortfolioRepository {
 
   Future<List<Project>> getProjects() async {
     try {
-      print('📡 Fetching projects from Supabase...');
       final data = await _client
           .from('projects')
           .select()
           .order('sort', ascending: true);
-      print('📦 Projects data received: $data');
 
       final list = data as List<dynamic>;
       if (list.isNotEmpty) {
@@ -86,9 +78,7 @@ class PortfolioRepository {
             .map((e) => Project.fromMap(e as Map<String, dynamic>))
             .toList();
       }
-    } catch (e) {
-      print('❌ Error in getProjects: $e. Using fallback projects.');
-    }
+    } catch (_) {}
     return [
       Project(
         title: 'PDF Invoice Generator',
@@ -97,6 +87,7 @@ class PortfolioRepository {
         projectUrl: 'https://arjunpshaji.github.io/invoice_builder_pdf/',
         techStack: 'Flutter, Riverpod, PDF, Dart',
         sort: 1,
+        imageUrl: 'assets/images/invoice_builder_thumbnail.png',
       ),
       Project(
         title: 'SimplyDate',
@@ -105,18 +96,17 @@ class PortfolioRepository {
         projectUrl: 'https://pub.dev/packages/simply_date',
         techStack: 'Dart, Flutter, Pub.dev, Open Source',
         sort: 2,
+        imageUrl: 'assets/images/pub_dev_bg.png',
       ),
     ];
   }
 
   Future<List<Experience>> getExperiences() async {
     try {
-      print('📡 Fetching experiences from Supabase...');
       final data = await _client
           .from('experiences')
           .select()
           .order('sort', ascending: true);
-      print('📦 Experiences data received: $data');
 
       final list = data as List<dynamic>;
       if (list.isNotEmpty) {
@@ -124,9 +114,7 @@ class PortfolioRepository {
             .map((e) => Experience.fromMap(e as Map<String, dynamic>))
             .toList();
       }
-    } catch (e) {
-      print('❌ Error in getExperiences: $e. Using fallback experiences.');
-    }
+    } catch (_) {}
     return [
       Experience(
         title: 'Software Developer - Techwarelab',
@@ -149,6 +137,28 @@ class PortfolioRepository {
             '• Contributed to core mobile feature modules using Flutter and Dart in an agile sprint environment.\n• Collaborated on responsive UI component libraries, unit testing, and Git version control workflows.',
         sort: 3,
       ),
+    ];
+  }
+
+  Future<List<Metric>> getMetrics() async {
+    try {
+      final data = await _client
+          .from('metrics')
+          .select()
+          .order('sort', ascending: true);
+
+      final list = data as List<dynamic>;
+      if (list.isNotEmpty) {
+        return list
+            .map((e) => Metric.fromMap(e as Map<String, dynamic>))
+            .toList();
+      }
+    } catch (_) {}
+    return [
+      Metric(value: "3+", label: "Years Experience", sort: 1),
+      Metric(value: "10+", label: "Projects & Packages", sort: 2),
+      Metric(value: "100%", label: "Clean Architecture", sort: 3),
+      Metric(value: "2", label: "Stores (Play & App Store)", sort: 4),
     ];
   }
 }

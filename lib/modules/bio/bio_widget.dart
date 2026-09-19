@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_portfolio/support/helper.dart';
 import 'package:my_portfolio/theme/app_theme.dart';
+import 'package:my_portfolio/theme/widgets/liquid_glass.dart';
+import 'package:my_portfolio/models/metric.dart';
 import 'package:provider/provider.dart';
 import 'package:my_portfolio/providers/portfolio_provider.dart';
 
@@ -101,6 +103,10 @@ class _MetricsStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final metrics = context.select<PortfolioProvider, List<Metric>>(
+      (p) => p.metrics,
+    );
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
@@ -120,12 +126,9 @@ class _MetricsStrip extends StatelessWidget {
         runAlignment: WrapAlignment.center,
         spacing: 24,
         runSpacing: 20,
-        children: const [
-          _MetricItem(value: "3+", label: "Years Experience"),
-          _MetricItem(value: "10+", label: "Projects & Packages"),
-          _MetricItem(value: "100%", label: "Clean Architecture"),
-          _MetricItem(value: "2", label: "Stores (Play & App Store)"),
-        ],
+        children: metrics.map((m) {
+          return _MetricItem(value: m.value, label: m.label);
+        }).toList(),
       ),
     );
   }
@@ -215,25 +218,13 @@ class _AboutStoryCard extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           if (cvUrl != null && cvUrl!.isNotEmpty)
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff7C3AED),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              icon: const Icon(Icons.description_outlined, size: 16, color: Colors.white),
-              label: const Text(
-                "View Curriculum Vitae",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  fontFamily: 'Manrope',
-                ),
-              ),
-              onPressed: () => launchAppUrl(cvUrl!),
+            LiquidGlassButton(
+              label: "View Curriculum Vitae",
+              icon: Icons.description_outlined,
+              primaryColor: const Color(0xff8B5CF6),
+              secondaryColor: const Color(0xff06B6D4),
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
+              onTap: () => launchAppUrl(cvUrl!),
             ),
         ],
       ),
