@@ -23,6 +23,10 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color? buttonColor;
   final Color? whiteColor;
   final Color? hoverColor;
+  final Color? cardBackground;
+  final Color? cardBorder;
+  final Color? accentColor;
+  final Color? surfaceColor;
 
   const AppColors({
     required this.background,
@@ -34,6 +38,10 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.buttonColor,
     required this.whiteColor,
     required this.hoverColor,
+    this.cardBackground,
+    this.cardBorder,
+    this.accentColor,
+    this.surfaceColor,
   });
 
   @override
@@ -47,6 +55,10 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? buttonColor,
     Color? whiteColor,
     Color? hoverColor,
+    Color? cardBackground,
+    Color? cardBorder,
+    Color? accentColor,
+    Color? surfaceColor,
   }) {
     return AppColors(
       background: background ?? this.background,
@@ -58,6 +70,10 @@ class AppColors extends ThemeExtension<AppColors> {
       buttonColor: buttonColor ?? this.buttonColor,
       whiteColor: whiteColor ?? this.whiteColor,
       hoverColor: hoverColor ?? this.hoverColor,
+      cardBackground: cardBackground ?? this.cardBackground,
+      cardBorder: cardBorder ?? this.cardBorder,
+      accentColor: accentColor ?? this.accentColor,
+      surfaceColor: surfaceColor ?? this.surfaceColor,
     );
   }
 
@@ -76,6 +92,10 @@ class AppColors extends ThemeExtension<AppColors> {
       buttonColor: Color.lerp(buttonColor, other.buttonColor, t),
       whiteColor: Color.lerp(whiteColor, other.whiteColor, t),
       hoverColor: Color.lerp(hoverColor, other.hoverColor, t),
+      cardBackground: Color.lerp(cardBackground, other.cardBackground, t),
+      cardBorder: Color.lerp(cardBorder, other.cardBorder, t),
+      accentColor: Color.lerp(accentColor, other.accentColor, t),
+      surfaceColor: Color.lerp(surfaceColor, other.surfaceColor, t),
     );
   }
 }
